@@ -17,4 +17,4 @@ Data from ERA5, 2m temperature, 2m dew point temperature, solar radiation downwa
 
 ### Example Berlin 2009
 
-![meteogram](plots/berlin_2009.png?raw=true "Meteogram")
+![meteogram](plots/berlin2009.png?raw=true "Meteogram")
