@@ -15,3 +15,6 @@ Heat indices during some World and European championships in ahtletics
   
 Data from ERA5, 2m temperature, 2m dew point temperature, solar radiation downward, 10m wind u,v-components, surface pressure
 
+### Example Berlin 2009
+
+![meteogram](plots/berlin_2009.png?raw=true "Meteogram")
