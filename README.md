@@ -5,7 +5,7 @@ Heat indices during some World and European championships in ahtletics
 
 | City | Year | Date | Location | Championships |
 |------|------|------|----------|--|
-|Berlin | 2009 | 6-12 Aug | 52.5°N, 13.2°E|World |
+|Berlin | 2009 | 15-23 Aug | 52.5°N, 13.2°E|World |
 |Daegu  | 2011 | 27 Aug - 4 Sep | 35.8°N, 128.7°E|World |
 |Helsinki | 2012 | 27 Jun - 1 Jul | 60.2°N, 24.9°E|European |
 |Moscow   | 2013 | 10-18 Aug | 55.7°N, 37.6°E|World |
