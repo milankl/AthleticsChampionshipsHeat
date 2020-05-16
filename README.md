@@ -30,7 +30,7 @@ From [ERA5-Land hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/
  - Surface thermal radiation downwards
  - Total precipitation
 
-From (ERA5 hourly data)[https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels?tab=overview] at 0.25° resolution
+From [ERA5 hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels?tab=overview) at 0.25° resolution
 
   - High cloud cover
   - Low cloud cover
