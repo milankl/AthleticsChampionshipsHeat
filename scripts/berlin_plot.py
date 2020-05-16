@@ -7,6 +7,13 @@ from matplotlib import gridspec
 from matplotlib.dates import WeekdayLocator, DayLocator, HourLocator, DateFormatter, drange, date2num, num2date
 from matplotlib.ticker import FormatStrFormatter
 from pythermalcomfort.models import utci
+from matplotlib.patches import Circle, Ellipse, Rectangle
+
+import os, sys, inspect
+HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+sys.path.append(HERE_PATH)
+from droplet import droplet
+
 
 path = "git/AthleticsChampionshipsHeat/data/"
 
@@ -16,6 +23,7 @@ T = ncfile.variables["t2m"][:]-273.15       # 2m temperature [°C]
 Td = ncfile.variables["d2m"][:]-273.15      # 2m dew point temperature [°C]
 u = ncfile.variables["u10"][:]              # 10m wind u-component [m/s]
 v = ncfile.variables["v10"][:]              # 10m wind v-component [m/s]
+precip_acc = ncfile.variables["tp"][:]      # Total precipation [mm]
 
 # daily accumulated radiation fluxes
 ssr_acc = ncfile.variables["ssr"][:]        # net shortwave radiation [J/m^2]
@@ -32,6 +40,13 @@ ncfile = nc.Dataset(path+"berlin2009_fdir_i.nc")
 fdir = ncfile.variables["fdir"][:]          # downward direct shortwave radiation [J/m^2]
 ncfile.close()
 
+# read the cloudiness from file
+ncfile = nc.Dataset(path+"berlin2009_clouds_i.nc")
+hcc = ncfile.variables["hcc"][:]
+mcc = ncfile.variables["mcc"][:]
+lcc = ncfile.variables["lcc"][:]
+ncfile.close()
+
 ## convert time
 t0 = datetime.datetime(1900,1,1)    # netCDF is in hours since
 utc2 = datetime.timedelta(hours=2)  # Berlin summer time is UTC+2
@@ -39,6 +54,7 @@ time_utc = [t0+datetime.timedelta(hours=np.float64(i)) for i in time_hours]
 time = [t+utc2 for t in time_utc]
 
 tstart = datetime.datetime(2009,8,15,0)    # start at 8am berlin time on Aug 6
+tstart1h = tstart+datetime.timedelta(hours=1)
 tend = datetime.datetime(2009,8,23,18)    # end at 6pm berlin time on Aug 12
 
 julianday0 = datetime.datetime(2009,1,1)
@@ -72,6 +88,8 @@ ssr = gradient(ssr_acc)
 str = gradient(str_acc)
 ssrd = gradient(ssrd_acc)
 strd = gradient(strd_acc)
+precip = gradient(precip_acc).mean(axis=(1,2))*one_hour
+precip = precip/precip.max()
 
 ## radiation decomposition
 # ssrd is diffusive+direct radiation, subtract the direct fdir to obtain diffusive only
@@ -204,38 +222,120 @@ for i in range(UTCI.shape[0]):
             UTCIwind[i,j,k] = utci(T[i+1,j,k],T[i+1,j,k],wspd[i+1,j,k],50)
             UTCIrh[i,j,k] = utci(T[i+1,j,k],T[i+1,j,k],0.5,rh[i+1,j,k])
             UTCImrt[i,j,k] = utci(T[i+1,j,k],MRT[i,j,k],0.5,50)
-            
+
+## clouds
+
+def clouds_plotter(axis,dates,highcloud,midcloud,lowcloud):
+    """ Adds the different types of clouds to a given axis."""
+    # add sun (and moon?)
+    idate = datetime.datetime(dates[0].year,dates[0].month,dates[0].day,12)
+    while idate < dates[-1]:
+        #sun = Circle((dates[t], 0.5), 0.2, color='yellow', zorder=0)
+        sun = Ellipse((idate, 0.5), 0.4/2., 0.5, angle=0.0, color='yellow', zorder=0)
+        axis.add_artist(sun)
+        idate = idate + datetime.timedelta(1)
+
+    # add mean cloud covers and scale to [0...1]
+    highcloudm = np.median(highcloud,axis=(1,2))
+    midcloudm = np.median(midcloud,axis=(1,2))
+    lowcloudm = np.median(lowcloud,axis=(1,2))
+
+    totalcloud=(highcloudm+midcloudm+lowcloudm)/3.
+    totalcloudhalf=totalcloud/2.
+    lowerbound=-totalcloudhalf+0.5
+    upperbound=totalcloudhalf+0.5
+
+    # don't plot clouds where totalcloud <= e.g. 0.05
+    threshold=0.03
+
+    # highcloud light grey, lowcloud dark grey
+    axis.fill_between(dates, y1=lowerbound, y2=upperbound, color='0.95',zorder=1, alpha=0.8, edgecolor='none',where=totalcloud>=threshold)
+    axis.fill_between(dates, y1=lowerbound, y2=upperbound-highcloudm/3., color='0.7',zorder=2, alpha=0.6, edgecolor='none',where=totalcloud>=threshold)
+    axis.fill_between(dates, y1=lowerbound, y2=lowerbound+lowcloudm/3.,  color='0.4',zorder=3, alpha=0.3, edgecolor='none',where=totalcloud>=threshold)
+    axis.set_facecolor('lightskyblue')
+
 ## plot
-fig,ax = plt.subplots(1,1,figsize=(10,4))
+fig = plt.figure(figsize=(10,6))
+all_ax = gridspec.GridSpec(4, 1, height_ratios=[0.8,.8,6,3],hspace=0)
+cloud_ax = plt.subplot(all_ax[0])
+rain_ax = plt.subplot(all_ax[1])
+ax = plt.subplot(all_ax[2])
+cont_ax = plt.subplot(all_ax[3])
+
+
+dt = datetime.timedelta(hours=0.9) #used to shift symbols left/right
+dropletpath = droplet(rot=-30)
+
+# heavy rain
+nlen = 720  # less than 743 but divisable by 2,3,4,5,6
+rgba_colors = np.zeros(nlen)     
+rgba = [(0.12,0.46,0.7,np.sqrt(max(precip[i],0))) for i in range(nlen)]
+
+timesc = time[1:nlen+1]
+
+rain_ax.scatter(timesc[::4],[.2,]*(nlen//4),80,rgba[::4],marker=dropletpath)
+rain_ax.scatter(timesc[1::4],[.6,]*(nlen//4),80,rgba[1::4],marker=dropletpath)
+rain_ax.scatter(timesc[2::4],[.4,]*(nlen//4),80,rgba[2::4],marker=dropletpath)
+rain_ax.scatter(timesc[3::4],[.8,]*(nlen//4),80,rgba[3::4],marker=dropletpath)
+
+# CLOUDS
+clouds_plotter(cloud_ax,time,hcc,mcc,lcc)
+
 
 # LABEL FORMATTING
 ax.yaxis.set_major_formatter(FormatStrFormatter('%d'+u'\N{DEGREE SIGN}'+'C'))
-ax.xaxis.set_minor_locator(HourLocator(np.arange(6, 25, 6)))    # minor
-ax.xaxis.set_minor_formatter(DateFormatter("%Hh"))
-ax.get_xaxis().set_tick_params(which='minor', direction='out',pad=2,labelsize=6)
-ax.xaxis.set_major_formatter(DateFormatter(" %a\n %d %b"))
-plt.setp(ax.get_xticklabels(), ha="left")
-ax.get_xaxis().set_tick_params(which='major', direction='out',pad=10,labelsize=10)
+cont_ax.yaxis.set_major_formatter(FormatStrFormatter('%d'+u'\N{DEGREE SIGN}'+'C'))
+cont_ax.xaxis.set_minor_locator(HourLocator(np.arange(6, 25, 6)))    # minor
+cont_ax.xaxis.set_minor_formatter(DateFormatter("%Hh"))
+cont_ax.get_xaxis().set_tick_params(which='minor', direction='out',pad=2,labelsize=6)
+cont_ax.xaxis.set_major_formatter(DateFormatter(" %a\n %d %b"))
+plt.setp(cont_ax.get_xticklabels(), ha="left")
+cont_ax.get_xaxis().set_tick_params(which='major', direction='out',pad=10,labelsize=10)
 ax.grid(alpha=0.2)
+ax.set_xticklabels([])
+rain_ax.set_xticks([])
+cloud_ax.set_xticks([])
+cloud_ax.set_yticks([])
+cont_ax.set_yticks([-12,-6,0,6,12])
+rain_ax.set_yticks([])
 
 # LIMITS
 ax.set_xlim(tstart,tend)
-ax.set_ylim(2,45)
+cont_ax.set_xlim(tstart,tend)
+rain_ax.set_xlim(tstart,tend)
+cloud_ax.set_xlim(tstart,tend)
+ax.set_ylim(8,45)
+cont_ax.set_ylim(-17,17)
+rain_ax.set_ylim(-0.1,1.1)
+cloud_ax.set_ylim(0, 1)
 
 # TITLES
-ax.set_title("Berlin 2009", loc="left",fontweight="bold")
+cloud_ax.set_title("Berlin 2009", loc="left",fontweight="bold")
 ax.set_ylabel("Temperature")
+cont_ax.set_ylabel("UTCI contribution")
+cont_ax.text(tstart1h,3,"perceived\nwarmer",rotation=90,fontsize=8)
+cont_ax.text(tstart1h,-3,"perceived\n     colder",rotation=90,fontsize=8,va="top")
 
 # DATA PLOTTING
 l1, = ax.plot(time,T[:,2,2],"k")
 l2, = ax.plot(time[1:],UTCI[:,2,2],"C3",lw=2)
-f1 = ax.fill_between(time[1:],UTCIwind[:,2,2],T[1:,2,2],color="C0",alpha=0.3)
-f2 = ax.fill_between(time[1:],UTCIrh[:,2,2],T[1:,2,2],color="C2",alpha=0.3)
-f3 = ax.fill_between(time[1:],UTCImrt[:,2,2],T[1:,2,2],color="C1",alpha=0.2)
-f4 = ax.fill_between(time[1:],np.percentile(UTCI,10,axis=(1,2)),np.percentile(UTCI,90,axis=(1,2)),color="C3",alpha=0.5)
+f1 = ax.fill_between(time,np.percentile(T,10,axis=(1,2)),np.percentile(T,90,axis=(1,2)),color="k",alpha=0.5)
+f2 = ax.fill_between(time[1:],np.percentile(UTCI,10,axis=(1,2)),np.percentile(UTCI,90,axis=(1,2)),color="C3",alpha=0.5)
 
-labels = ["Air temperature","UTCI"+10*" "+"UTCI-contribution from:","Wind","Humidity","Radiation"]
-ax.legend([l1,(l2,f4),f1,f2,f3],labels,loc=3,ncol=5)
+
+# CONTRIBUTIONS TO UTCI
+cont_ax.plot(time,np.zeros_like(T[:,2,2]),"k")
+cont_ax.plot(time[1:],UTCIwind[:,2,2]-T[1:,2,2],color="C0")
+cont_ax.plot(time[1:],UTCIrh[:,2,2]-T[1:,2,2],color="C2",zorder=5)
+cont_ax.plot(time[1:],UTCImrt[:,2,2]-T[1:,2,2],color="C1")
+
+cont_ax.fill_between(time[1:],UTCIwind[:,2,2]-T[1:,2,2],color="C0",alpha=0.5,label="Wind")
+cont_ax.fill_between(time[1:],UTCIrh[:,2,2]-T[1:,2,2],color="C2",alpha=0.6,label="Humidity",zorder=5)
+cont_ax.fill_between(time[1:],UTCImrt[:,2,2]-T[1:,2,2],color="C1",alpha=0.35,label="Radiation")
+
+labels = ["Air temperature","Universal thermal climate index"]
+ax.legend([(l1,f1),(l2,f2)],labels,loc=2,ncol=2)
+cont_ax.legend(loc=4,ncol=3)
 
 plt.tight_layout()
 plt.show()
