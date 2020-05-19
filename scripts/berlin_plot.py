@@ -47,19 +47,27 @@ mcc = ncfile.variables["mcc"][:]
 lcc = ncfile.variables["lcc"][:]
 ncfile.close()
 
+ncfile = nc.Dataset(path+"berlin2009_utcimrt.nc")
+mrt2 = ncfile.variables["mrt"][:]-273.15
+utci2 = ncfile.variables["utci"][:]-273.15
+time2 = ncfile.variables["time"][:]
+ncfile.close()
+
 ## convert time
 t0 = datetime.datetime(1900,1,1)    # netCDF is in hours since
 utc2 = datetime.timedelta(hours=2)  # Berlin summer time is UTC+2
 time_utc = [t0+datetime.timedelta(hours=np.float64(i)) for i in time_hours]
 time = [t+utc2 for t in time_utc]
 
-tstart = datetime.datetime(2009,8,15,0)    # start at 8am berlin time on Aug 6
+tstart = datetime.datetime(2009,8,15,0)    # start at 8am berlin time on Aug 15
 tstart1h = tstart+datetime.timedelta(hours=1)
-tend = datetime.datetime(2009,8,23,18)    # end at 6pm berlin time on Aug 12
+tend = datetime.datetime(2009,8,23,18)    # end at 6pm berlin time on Aug 23
 
 julianday0 = datetime.datetime(2009,1,1)
 juliandays = np.array([(t-julianday0).days for t in time_utc])
 hours = np.array([(t-julianday0).seconds/3600 for t in time_utc])
+
+time2dt = [tstart+datetime.timedelta(hours=np.float64(i)+2) for i in time2]
 
 ## relative humidity from dew point
 # Magnus formula
@@ -177,7 +185,7 @@ for ilat,lat in enumerate(lats):
                 cos_phi0[i,ilat,ilon] = 0
             else:
                 cos_phi0[i,ilat,ilon] = sind(decl)*sind(lat) + \
-            1/(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon])* \
+            1/(2*np.pi/360*(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon]))* \
             cosd(decl)*cosd(lat)*(sind(hminmax[i+1,ilat,ilon])-
                                     sind(hminmax[i,ilat,ilon]))
             
@@ -196,7 +204,10 @@ for i in range(len(time_utc)-1):
         for k in range(len(lats)):
             if cos_phi0[i,j,k] > 0:
                 # convert to W/m^2 from J/m^2
-                Istar[i,j,k] = fdir[i+1,j,k]/cos_phi0[i,j,k]/one_hour
+                if cos_phi[i,j,k] <= 0:
+                    Istar[i,j,k] = 0.0
+                else:
+                    Istar[i,j,k] = fdir[i+1,j,k]/cos_phi0[i,j,k]/one_hour
 
 
 alpha_ir = 0.7      # absorption coefficient of a human body
@@ -222,6 +233,18 @@ for i in range(UTCI.shape[0]):
             UTCIwind[i,j,k] = utci(T[i+1,j,k],T[i+1,j,k],wspd[i+1,j,k],50)
             UTCIrh[i,j,k] = utci(T[i+1,j,k],T[i+1,j,k],0.5,rh[i+1,j,k])
             UTCImrt[i,j,k] = utci(T[i+1,j,k],MRT[i,j,k],0.5,50)
+
+## COMPUTE UTCI from mrt2
+
+utci22 = np.zeros_like(utci2)
+utci22mrt = np.zeros_like(utci2)
+toffset = np.argmax(np.array(time) == (tstart+utc2))
+
+for i in range(utci2.shape[0]):
+    for j in range(utci2.shape[1]):
+        for k in range(utci2.shape[2]):
+            utci22[i,j,k] = utci(T[i+1+toffset,j,k],mrt2[i,j,k],wspd[i+1+toffset,j,k],rh[i+1+toffset,j,k])
+            utci22mrt[i,j,k] = utci(T[i+1+toffset,j,k],mrt2[i,j,k],0.5,50)
 
 ## clouds
 
@@ -296,7 +319,7 @@ ax.set_xticklabels([])
 rain_ax.set_xticks([])
 cloud_ax.set_xticks([])
 cloud_ax.set_yticks([])
-cont_ax.set_yticks([-12,-6,0,6,12])
+cont_ax.set_yticks([-10,-5,0,5,10])
 rain_ax.set_yticks([])
 
 # LIMITS
@@ -304,8 +327,8 @@ ax.set_xlim(tstart,tend)
 cont_ax.set_xlim(tstart,tend)
 rain_ax.set_xlim(tstart,tend)
 cloud_ax.set_xlim(tstart,tend)
-ax.set_ylim(8,45)
-cont_ax.set_ylim(-17,17)
+ax.set_ylim(8,38)
+cont_ax.set_ylim(-9,9)
 rain_ax.set_ylim(-0.1,1.1)
 cloud_ax.set_ylim(0, 1)
 
@@ -313,8 +336,8 @@ cloud_ax.set_ylim(0, 1)
 cloud_ax.set_title("Berlin 2009", loc="left",fontweight="bold")
 ax.set_ylabel("Temperature")
 cont_ax.set_ylabel("UTCI contribution")
-cont_ax.text(tstart1h,3,"perceived\nwarmer",rotation=90,fontsize=8)
-cont_ax.text(tstart1h,-3,"perceived\n     colder",rotation=90,fontsize=8,va="top")
+cont_ax.text(tstart1h,1.3,"perceived\nwarmer",rotation=90,fontsize=8,fontweight="bold",zorder=10)
+cont_ax.text(tstart1h,-1,"perceived\n     colder",rotation=90,fontsize=8,va="top",fontweight="bold",zorder=10)
 
 # DATA PLOTTING
 l1, = ax.plot(time,T[:,2,2],"k")
