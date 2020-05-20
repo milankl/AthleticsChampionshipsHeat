@@ -173,7 +173,7 @@ for ilat,lat in enumerate(lats):
                 cos_phi0[i,ilat,ilon] = 0
             else:
                 cos_phi0[i,ilat,ilon] = sind(decl)*sind(lat) + \
-            1/(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon])* \
+            1/(2*np.pi/360*(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon]))* \
             cosd(decl)*cosd(lat)*(sind(hminmax[i+1,ilat,ilon])-
                                     sind(hminmax[i,ilat,ilon]))
             
@@ -232,9 +232,13 @@ def clouds_plotter(axis,dates,highcloud,midcloud,lowcloud):
         idate = idate + datetime.timedelta(1)
 
     # add mean cloud covers and scale to [0...1]
-    highcloudm = np.median(highcloud,axis=(1,2))
-    midcloudm = np.median(midcloud,axis=(1,2))
-    lowcloudm = np.median(lowcloud,axis=(1,2))
+    #highcloudm = np.median(highcloud,axis=(1,2))
+    #midcloudm = np.median(midcloud,axis=(1,2))
+    #lowcloudm = np.median(lowcloud,axis=(1,2))
+
+    highcloudm = highcloud[:,2,2]
+    midcloudm = midcloud[:,2,2]
+    lowcloudm = lowcloud[:,2,2]
 
     totalcloud=(highcloudm+midcloudm+lowcloudm)/3.
     totalcloudhalf=totalcloud/2.
@@ -292,7 +296,7 @@ ax.set_xticklabels([])
 rain_ax.set_xticks([])
 cloud_ax.set_xticks([])
 cloud_ax.set_yticks([])
-cont_ax.set_yticks([-12,-6,0,6,12])
+cont_ax.set_yticks([-5,0,5])
 rain_ax.set_yticks([])
 
 # LIMITS
@@ -300,8 +304,8 @@ ax.set_xlim(tstart,tend)
 cont_ax.set_xlim(tstart,tend)
 rain_ax.set_xlim(tstart,tend)
 cloud_ax.set_xlim(tstart,tend)
-ax.set_ylim(2,42)
-cont_ax.set_ylim(-17,17)
+ax.set_ylim(4,35)
+cont_ax.set_ylim(-10,10)
 rain_ax.set_ylim(-0.1,1.1)
 cloud_ax.set_ylim(0, 1)
 
@@ -309,8 +313,8 @@ cloud_ax.set_ylim(0, 1)
 cloud_ax.set_title("Moscow 2013", loc="left",fontweight="bold")
 ax.set_ylabel("Temperature")
 cont_ax.set_ylabel("UTCI contribution")
-cont_ax.text(tstart1h,3,"perceived\nwarmer",rotation=90,fontsize=8)
-cont_ax.text(tstart1h,-3,"perceived\n     colder",rotation=90,fontsize=8,va="top")
+cont_ax.text(tstart1h,1,"perceived\nwarmer",rotation=90,fontsize=8,fontweight="bold",zorder=10)
+cont_ax.text(tstart1h,-1,"perceived\n     colder",rotation=90,fontsize=8,va="top",fontweight="bold")
 
 # DATA PLOTTING
 l1, = ax.plot(time,T[:,2,2],"k")
