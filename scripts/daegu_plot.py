@@ -49,9 +49,9 @@ utc2 = datetime.timedelta(hours=4)  # Korea standard time is UTC+9
 time_utc = [t0+datetime.timedelta(hours=np.float64(i)) for i in time_hours]
 time = [t+utc2 for t in time_utc]
 
-tstart = datetime.datetime(2011,8,27,0)    # start at 8am berlin time on Aug 6
+tstart = datetime.datetime(2011,8,27,0)    # start at 8am Korean time on Aug 27
 tstart1h = tstart+datetime.timedelta(hours=1)
-tend = datetime.datetime(2011,9,4,18)    # end at 6pm berlin time on Aug 12
+tend = datetime.datetime(2011,9,4,18)    # end at 6pm Korean time on Sep 4
 
 julianday0 = datetime.datetime(tstart.year,1,1)
 juliandays = np.array([(t-julianday0).days for t in time_utc])
@@ -173,7 +173,7 @@ for ilat,lat in enumerate(lats):
                 cos_phi0[i,ilat,ilon] = 0
             else:
                 cos_phi0[i,ilat,ilon] = sind(decl)*sind(lat) + \
-            1/(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon])* \
+            1/(2*np.pi/360*(hminmax[i+1,ilat,ilon]-hminmax[i,ilat,ilon]))* \
             cosd(decl)*cosd(lat)*(sind(hminmax[i+1,ilat,ilon])-
                                     sind(hminmax[i,ilat,ilon]))
             
@@ -220,7 +220,6 @@ for i in range(UTCI.shape[0]):
             UTCImrt[i,j,k] = utci(T[i+1,j,k],MRT[i,j,k],0.5,50)
 
 ## clouds
-
 def clouds_plotter(axis,dates,highcloud,midcloud,lowcloud):
     """ Adds the different types of clouds to a given axis."""
     # add sun (and moon?)
@@ -292,7 +291,7 @@ ax.set_xticklabels([])
 rain_ax.set_xticks([])
 cloud_ax.set_xticks([])
 cloud_ax.set_yticks([])
-cont_ax.set_yticks([-16,-8,0,8,16])
+cont_ax.set_yticks([-5,0,5])
 rain_ax.set_yticks([])
 
 # LIMITS
@@ -300,8 +299,8 @@ ax.set_xlim(tstart,tend)
 cont_ax.set_xlim(tstart,tend)
 rain_ax.set_xlim(tstart,tend)
 cloud_ax.set_xlim(tstart,tend)
-ax.set_ylim(17,53)
-cont_ax.set_ylim(-22,22)
+ax.set_ylim(17,40)
+cont_ax.set_ylim(-8,8)
 rain_ax.set_ylim(-0.1,1.1)
 cloud_ax.set_ylim(0, 1)
 
@@ -309,8 +308,8 @@ cloud_ax.set_ylim(0, 1)
 cloud_ax.set_title("Daegu 2011", loc="left",fontweight="bold")
 ax.set_ylabel("Temperature")
 cont_ax.set_ylabel("UTCI contribution")
-cont_ax.text(tstart1h,3,"perceived\nwarmer",rotation=90,fontsize=8,zorder=10)
-cont_ax.text(tstart1h,-3,"perceived\n     colder",rotation=90,fontsize=8,va="top")
+cont_ax.text(tstart1h,1,"perceived\nwarmer",rotation=90,fontsize=8,zorder=10,fontweight="bold")
+cont_ax.text(tstart1h,-1,"perceived\n     colder",rotation=90,fontsize=8,va="top",fontweight="bold")
 
 # DATA PLOTTING
 l1, = ax.plot(time,T[:,2,2],"k")
