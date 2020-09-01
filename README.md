@@ -3,7 +3,7 @@ Universal thermal heat indices during some World and European championships in a
 
 ## Events and stadium coordinates
 
-| City | Year | Date | Location | Championships |
+| City | Year | Date | Location | Championship |
 |------|------|------|----------|--|
 |Berlin | 2009 | 15-23 Aug | 52.5°N, 13.2°E|World |
 |Daegu  | 2011 | 27 Aug - 4 Sep | 35.8°N, 128.7°E|World |
@@ -17,25 +17,25 @@ Universal thermal heat indices during some World and European championships in a
 
 From [ERA5-Land hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land?tab=overview) at 0.1° resolution
 
- - 2m temperature
- - 2m dew point temperature
- - 10m u-component of wind
- - 10m v-component of wind
- - 2m dewpoint temperature
- - 2m temperature
- - Surface net solar radiation
- - Surface net thermal radiation
- - Surface pressure
- - Surface solar radiation downwards
- - Surface thermal radiation downwards
- - Total precipitation
+ - 2m temperature (t2m)
+ - 2m dew point temperature (d2m)
+ - 10m u-component of wind (u10)
+ - 10m v-component of wind (v10)
+ - Surface net solar radiation (ssr)
+ - Surface net thermal radiation (str)
+ - Surface pressure (sp)
+ - Surface solar radiation downwards (ssrd)
+ - Surface thermal radiation downwards (strd)
+ - Total precipitation (tp)
 
 From [ERA5 hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels?tab=overview) at 0.25° resolution
 
-  - High, low and medium cloud cover
-  - Total sky direct solar radiation at surface
+  - High, medium and low cloud cover (hcc, mcc, lcc)
+  - Total sky direct solar radiation at surface (fdir)
 
-The 0.25° ERA5 data was bilinearly interpolated on ERA5-Land's 0.1°-grid. The spatial resolution is only used for uncertainty estimation. The closest grid point the stadium is used.
+The 0.25° ERA5 data was bilinearly interpolated on ERA5-Land's 0.1°-grid.
+The spatial resolution is only used for uncertainty estimation.
+The closest grid point the stadium is used.
 
 ### The Universal Thermal Climate Index
 
