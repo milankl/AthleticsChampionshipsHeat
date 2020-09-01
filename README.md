@@ -35,7 +35,7 @@ From [ERA5 hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reana
 
 The 0.25° ERA5 data was bilinearly interpolated on ERA5-Land's 0.1°-grid.
 The spatial resolution is only used for uncertainty estimation.
-The closest grid point the stadium is used.
+The closest grid point to the stadium is used.
 
 ### The Universal Thermal Climate Index
 
