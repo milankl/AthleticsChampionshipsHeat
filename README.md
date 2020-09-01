@@ -1,5 +1,5 @@
-# AthleticsChampionshipsHeat
-Universal thermal heat indices during some World and European championships in ahtletics.
+# Heat indices during European and World Championships in Athletics
+Universal thermal heat indices during some World and European championships in athletics.
 
 ## Events and stadium coordinates
 
