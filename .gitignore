@@ -1,3 +1,5 @@
 .DS_Store
 /data/ori
 *.npz
+scripts/.ipynb_checkpoints
+scripts/__pycache__
