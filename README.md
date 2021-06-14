@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/262036919.svg)](https://zenodo.org/badge/latestdoi/262036919)
 # Heat indices during European and World Championships in Athletics
 Universal thermal heat indices during some World and European championships in athletics.
 
