@@ -4,8 +4,9 @@ Universal thermal heat indices during some World and European championships in a
 
 This repository contains meteorological data and analysis scripts for
 
-K Hollander, M Kloewer, A Richardson, L Navarro, S Racinais, V Scheer, A Murray, P Branco, T Timpka, A Junge and P Edouard, 2021. *Apparent temperature and heat-related illnesses during international athletic championships: A prospective cohort study*. **Scandinavian Journal of Medicine and Science in Sports**, in review.
+K Hollander, M Kloewer, A Richardson, L Navarro, S Racinais, V Scheer, A Murray, P Branco, T Timpka, A Junge and P Edouard, 2021. *Apparent temperature and heat-related illnesses during international athletic championships: A prospective cohort study*. **Scandinavian Journal of Medicine and Science in Sports**, accepted.
 
+and is used for daily heat forecasts at the Tokyo Olympic Games, tweeted daily via [twitter.com/HeatForecast](https://twitter.com/HeatForecast)
 ## Events and stadium coordinates
 
 | City | Year | Date | Location | Championship | UTC |
