@@ -1,10 +1,13 @@
 .DS_Store
-/data/ori
-*.npz
-scripts/.ipynb_checkpoints
-scripts/__pycache__
-/data/IllnessesHeat_Overview-perDay*.xlsx
-/data/IllnessesHeat.xlsx
-/data/IllnessesHeat_10Sep.xlsx
+
+# notebooks
+*.ipynb_checkpoints
+*__pycache__
 .~*
-scripts/.ipynb_checkpoints/
+
+# data
+data/utci/hourly/*.npz
+# *.npz
+
+# incidence data
+/data/IllnessesHeat*.xlsx
