@@ -12,3 +12,4 @@ data/utci/hourly/*.npz
 
 # incidence data
 /data/IllnessesHeat*.xlsx
+~$IllnessesHeat*.xlsx
