@@ -1,0 +1,36 @@
+UTCI range min [˚C], UTCI range max [˚C], discipline, daily incidence median, daily incidence mean, daily incidence max
+14,22,Short-duration,0.0000,0.1380,1.0040
+14,22,Combined events,0.0000,0.0000,0.0000
+14,22,Middle distance,0.0000,0.3968,5.5556
+14,22,Long distance,0.0000,0.7981,11.1732
+14,22,Marathon,0.0000,1.9305,27.0270
+14,22,Race walking,0.0000,3.3211,26.0870
+14,22,All,0.0000,0.4374,1.9108
+22,26,Short-duration,0.0000,0.1255,1.0040
+22,26,Combined events,0.0000,0.0000,0.0000
+22,26,Middle distance,0.0000,0.8224,6.5789
+22,26,Long distance,0.0000,0.0000,0.0000
+22,26,Marathon,0.0000,4.7716,32.0000
+22,26,Race walking,0.0000,2.7174,21.7391
+22,26,All,0.2803,1.1918,4.0844
+26,30,Short-duration,0.0000,0.1969,1.7065
+26,30,Combined events,0.0000,1.1655,15.1515
+26,30,Middle distance,0.0000,0.4274,5.5556
+26,30,Long distance,0.0000,0.4297,5.5866
+26,30,Marathon,0.0000,13.6566,86.3309
+26,30,Race walking,0.0000,8.6563,43.4783
+26,30,All,1.1488,2.0275,6.7265
+30,34,Short-duration,0.0000,0.3200,1.7065
+30,34,Combined events,0.0000,0.0000,0.0000
+30,34,Middle distance,0.0000,1.6447,6.5789
+30,34,Long distance,0.0000,0.8013,6.4103
+30,34,Marathon,0.0000,25.9825,158.2734
+30,34,Race walking,0.0000,6.1141,27.1739
+30,34,All,1.5823,2.9301,12.8924
+34,38,Short-duration,0.0000,0.2714,1.0070
+34,38,Combined events,0.0000,0.0000,0.0000
+34,38,Middle distance,0.0000,2.0952,8.0000
+34,38,Long distance,0.0000,0.9653,6.7568
+34,38,Marathon,0.0000,0.0000,0.0000
+34,38,Race walking,0.0000,15.7654,95.6522
+34,38,All,1.1488,1.6021,7.0064
