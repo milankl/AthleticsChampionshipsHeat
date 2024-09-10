@@ -1,7 +1,8 @@
 .DS_Store
+.vscode
 
 # notebooks
-*.ipynb_checkpoints
+.ipynb_checkpoints
 *__pycache__
 .~*
 
