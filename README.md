@@ -1,13 +1,18 @@
 [![DOI](https://zenodo.org/badge/262036919.svg)](https://zenodo.org/badge/latestdoi/262036919)
-# Heat indices during European and World Championships in Athletics
+# Feels-like temperatures during European and World Championships in Athletics
 Universal thermal heat indices during some World and European championships in athletics.
 
-This repository contains meteorological data and analysis scripts for
+This repository contains meteorological data and analysis scripts for the following publications
 
-K Hollander, M Kloewer, A Richardson, L Navarro, S Racinais, V Scheer, A Murray, P Branco, T Timpka, A Junge and P Edouard, 2021.
+- K Hollander, M Klöwer, A Richardson, L Navarro, S Racinais, V Scheer, A Murray, P Branco, T Timpka, A Junge and P Edouard, 2021.
 *Apparent temperature and heat-related illnesses during international athletic championships: A prospective cohort study*. **Scandinavian Journal of Medicine and Science in Sports**, [10.1111/sms.14029](https://doi.org/10.1111/sms.14029)
 
-and is used for daily heat forecasts at the Tokyo Olympic Games, tweeted daily via [twitter.com/HeatForecast](https://twitter.com/HeatForecast)
+- Klöwer, M, P Edouard, AM Niess, S Racinais, Y Pitsiladis, F Pappenberger and K Hollander, 2023. *Forecasting feels-like temperatures to reduce heat illnesses during sport events*, **British Journal of Sports Medicine**, [10.1136/bjsports-2022-106413](https://doi.org/10.1136/bjsports-2022-106413)
+
+- Edouard, P, PE Dandrieux, M Klöwer, A Junge, S Racinais, P Branco, K Hollander, L Navarro, 2024. *Association between feels-like temperatures and injury risk during international outdoor athletic championships: A prospective cohort study on 29,579 athletes’ starts during 10 championships*, **British Journal of Sports Medicine**, accepted.
+
+and was used for daily heat forecasts at the Tokyo Olympic Games, tweeted daily via [twitter.com/HeatForecast](https://twitter.com/HeatForecast).
+Also see the heat forecast for the Paris Olympic Games at [github.com/heatforecast/heatforecast.github.io](https://github.com/heatforecast/heatforecast.github.io).
 
 ## Events and stadium coordinates
 
@@ -44,6 +49,8 @@ From [ERA5 hourly data](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reana
 The 0.25° ERA5 data was bilinearly interpolated on ERA5-Land's 0.1°-grid.
 The spatial resolution is only used for uncertainty estimation.
 The closest grid point to the stadium is used.
+
+For data and scripts used in Edouard et al. 2024, see [/bjsm2024](https://github.com/milankl/AthleticsChampionshipsHeat/tree/main/bjsm2024).
 
 ### The Universal Thermal Climate Index
 
