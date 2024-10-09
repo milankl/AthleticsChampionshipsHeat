@@ -8,6 +8,7 @@ K Hollander, M Kloewer, A Richardson, L Navarro, S Racinais, V Scheer, A Murray,
 *Apparent temperature and heat-related illnesses during international athletic championships: A prospective cohort study*. **Scandinavian Journal of Medicine and Science in Sports**, [10.1111/sms.14029](https://doi.org/10.1111/sms.14029)
 
 and is used for daily heat forecasts at the Tokyo Olympic Games, tweeted daily via [twitter.com/HeatForecast](https://twitter.com/HeatForecast)
+
 ## Events and stadium coordinates
 
 | City | Year | Date | Location | Championship | UTC |
